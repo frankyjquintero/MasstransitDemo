@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+
+
+  mssql:
+    image: masstransit/sqlserver-quartz:latest
+    ports:
+      - 1433:1433
+
+  rabbitmq:
+    container_name: "rabbitmqcontainer"
+    image: rabbitmq:management
+    hostname: "rabbitmq"
+    ports:
+        - '5672:5672'
+        - '15672:15672'
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
+  #masstransitdemo.api:
+  #  image: ${DOCKER_REGISTRY-}masstransitdemoapi
+  #  build:
+  #    context: .
+  #    dockerfile: MasstransitDemo.Api/Dockerfile
+  #  ports:
+  #      - '7047:443'
+  #      - '7048:80'     
+  #  depends_on:
+  #    rabbitmq:
+  #      condition: service_healthy
+
+  #masstransit.consumer:
+  #  image: ${DOCKER_REGISTRY-}masstransitconsumer
+  #  build:
+  #    context: .
+  #    dockerfile: MasstransitDemo.Consumer/Dockerfile
+  #  deploy:
+  #    replicas: 5
+  #  depends_on:
+  #    rabbitmq:
+  #      condition: service_healthy
